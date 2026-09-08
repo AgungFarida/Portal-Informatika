@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contoh Materi — Pengenalan Algoritma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0F14; --surface:#131C24; --surface-2:#192530; --border:#243140;
+  --text:#EAF0F4; --text-dim:#93A3AF; --text-faint:#576470;
+  --blue:#4E9FFF; --teal:#2DD4BF;
+  --font-display:'Plus Jakarta Sans', sans-serif; --font-body:'Inter', sans-serif; --font-mono:'JetBrains Mono', monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.7;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:var(--font-display);font-weight:800;letter-spacing:-.01em;}
+p{color:var(--text-dim);}
+code{font-family:var(--font-mono);background:var(--surface-2);color:var(--teal);padding:.15em .4em;border-radius:4px;}
+.topbar{position:sticky;top:0;z-index:20;padding:14px 24px;background:rgba(10,15,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.topbar a{color:var(--teal);text-decoration:none;font-family:var(--font-mono);font-size:13px;}
+#konten-utama{visibility:hidden; max-width:760px; margin:0 auto; padding:50px 24px 90px;}
+#guard-loading{text-align:center;padding:120px 20px;color:var(--text-faint);font-family:var(--font-mono);font-size:13px;}
+.eyebrow{font-family:var(--font-mono);font-size:12px;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+h1{font-size:clamp(26px,4vw,36px);margin:0 0 14px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;margin:18px 0;}
+ul{color:var(--text-dim);}
+</style>
+</head>
+<body>
+
+<div class="topbar"><a href="../index.html">&larr; Kembali ke Portal</a></div>
+
+<div id="guard-loading">Memeriksa akses materi…</div>
+
+<div id="konten-utama">
+  <div class="eyebrow">📘 Materi · Berpikir Komputasional</div>
+  <h1>Pengenalan Algoritma</h1>
+  <p>Ini adalah <strong>contoh halaman materi</strong> yang bisa kamu jadikan template. Ganti judul, teks, dan gambar di bawah dengan konten materimu sendiri. Halaman ini otomatis mengikuti kolom <code>Tampilkan</code> di Google Sheet — kalau dicentang, siswa bisa membukanya lewat Portal; kalau tidak, halaman akan terkunci.</p>
+
+  <div class="card">
+    <h2>Apa itu Algoritma?</h2>
+    <p>Algoritma adalah urutan langkah logis dan terstruktur untuk menyelesaikan suatu masalah. Sama seperti resep masakan, algoritma yang baik harus jelas, berurutan, dan bisa diikuti tanpa kebingungan.</p>
+  </div>
+
+  <div class="card">
+    <h2>Ciri-ciri Algoritma yang Baik</h2>
+    <ul>
+      <li><strong>Jelas</strong> — setiap langkah tidak ambigu.</li>
+      <li><strong>Berurutan</strong> — punya awal dan akhir yang pasti.</li>
+      <li><strong>Efektif</strong> — setiap langkah bisa benar-benar dikerjakan.</li>
+      <li><strong>Umum</strong> — bisa dipakai untuk berbagai kasus serupa, bukan cuma satu kasus.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Contoh Sederhana</h2>
+    <p>Algoritma membuat teh manis:</p>
+    <ol>
+      <li>Didihkan air.</li>
+      <li>Masukkan teh celup ke gelas.</li>
+      <li>Tuang air panas ke gelas.</li>
+      <li>Tunggu 2–3 menit.</li>
+      <li>Angkat teh celup, tambahkan gula secukupnya, aduk.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ====== WAJIB DI SETIAP FILE MATERI: MODUL_ID + config.js + guard.js ====== -->
+<script>const MODUL_ID = "INF-101";</script>
+<script src="../config.js"></script>
+<script src="../guard.js"></script>
+</body>
+</html>

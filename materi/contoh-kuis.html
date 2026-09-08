@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contoh Kuis — Dasar Algoritma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0A0F14; --surface:#131C24; --surface-2:#192530; --border:#243140;
+  --text:#EAF0F4; --text-dim:#93A3AF; --text-faint:#576470;
+  --blue:#4E9FFF; --teal:#2DD4BF; --mint:#5EEAB0; --coral:#FF7A7A;
+  --font-display:'Plus Jakarta Sans', sans-serif; --font-body:'Inter', sans-serif; --font-mono:'JetBrains Mono', monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.7;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:var(--font-display);font-weight:800;letter-spacing:-.01em;}
+p{color:var(--text-dim);}
+.topbar{position:sticky;top:0;z-index:20;padding:14px 24px;background:rgba(10,15,20,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+.topbar a{color:var(--teal);text-decoration:none;font-family:var(--font-mono);font-size:13px;}
+#konten-utama{visibility:hidden; max-width:640px; margin:0 auto; padding:50px 24px 90px;}
+#guard-loading{text-align:center;padding:120px 20px;color:var(--text-faint);font-family:var(--font-mono);font-size:13px;}
+.eyebrow{font-family:var(--font-mono);font-size:12px;color:var(--teal);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;}
+h1{font-size:clamp(24px,4vw,32px);margin:0 0 8px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;margin:16px 0;}
+
+/* form identitas */
+.mode-toggle{display:flex;gap:8px;margin-bottom:16px;}
+.mode-btn{flex:1;padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text-dim);font-family:var(--font-mono);font-size:12.5px;cursor:pointer;}
+.mode-btn.active{background:var(--blue);color:#0A0F14;border-color:var(--blue);font-weight:700;}
+label{display:block;font-size:12.5px;color:var(--text-faint);margin:12px 0 5px;font-family:var(--font-mono);}
+input,textarea{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:var(--font-body);font-size:14px;}
+input:focus,textarea:focus{outline:none;border-color:var(--blue);}
+.hide{display:none !important;}
+
+/* kuis pilihan ganda */
+.q-text{font-size:16px;font-weight:600;margin-bottom:14px;}
+.q-opt{display:block;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:var(--font-body);font-size:14px;cursor:pointer;}
+.q-opt:hover:not(:disabled){border-color:var(--blue);}
+.q-opt.correct{border-color:var(--mint);background:rgba(94,234,176,.12);color:var(--mint);}
+.q-opt.wrong{border-color:var(--coral);background:rgba(255,122,122,.12);color:var(--coral);}
+.q-opt:disabled{cursor:default;}
+.q-explain{font-size:13px;color:var(--text-faint);margin-top:10px;display:none;}
+.q-foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;}
+.q-score{font-family:var(--font-mono);font-size:13px;color:var(--text-faint);}
+button.primary{padding:10px 18px;border-radius:8px;border:none;background:var(--blue);color:#0A0F14;font-weight:700;font-family:var(--font-body);font-size:14px;cursor:pointer;}
+button.primary:disabled{opacity:.4;cursor:not-allowed;}
+button.secondary{padding:10px 18px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:var(--font-body);font-size:14px;cursor:pointer;}
+
+.result-box{text-align:center;padding:24px;}
+.result-score{font-family:var(--font-mono);font-size:34px;font-weight:700;color:var(--teal);margin:6px 0;}
+.submit-box{margin-top:18px;text-align:center;}
+#submitResult{display:none;margin-top:12px;font-size:13.5px;color:var(--mint);}
+</style>
+</head>
+<body>
+
+<div class="topbar"><a href="../index.html">&larr; Kembali ke Portal</a></div>
+
+<div id="guard-loading">Memeriksa akses materi…</div>
+
+<div id="konten-utama">
+  <div class="eyebrow">📝 Kuis · Berpikir Komputasional</div>
+  <h1>Kuis: Dasar Algoritma</h1>
+  <p>Jawab semua soal, lalu isi identitas dan kirim hasilmu ke gurumu. Ini adalah <strong>contoh/template</strong> — ganti daftar soal di bagian <code>quizData</code> pada kode di bawah dengan soal materimu sendiri.</p>
+
+  <!-- ===== KUIS PILIHAN GANDA ===== -->
+  <div class="card" id="quizCard">
+    <div class="q-text" id="qText"></div>
+    <div id="qOptions"></div>
+    <div class="q-explain" id="qExplain"></div>
+    <div class="q-foot">
+      <span class="q-score" id="qScoreLabel">Skor: 0</span>
+      <button class="primary" id="qNextBtn" disabled>Soal Berikutnya &rarr;</button>
+    </div>
+  </div>
+
+  <div class="card result-box" id="quizResult" style="display:none">
+    <p style="font-family:var(--font-mono);font-size:12px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;">Hasil Kuis</p>
+    <div class="result-score" id="quizResultScore">0/0</div>
+    <p id="quizResultMsg"></p>
+  </div>
+
+  <!-- ===== FORM IDENTITAS + KIRIM HASIL ===== -->
+  <div class="card">
+    <h2 style="font-size:17px;margin-bottom:12px;">Kirim Hasil ke Guru</h2>
+    <div class="mode-toggle" id="modeToggle">
+      <button type="button" class="mode-btn active" data-mode="Individu">Individu</button>
+      <button type="button" class="mode-btn" data-mode="Kelompok">Kelompok</button>
+    </div>
+
+    <div id="fieldsIndividu">
+      <label>Nama</label>
+      <input type="text" id="qNama" placeholder="Nama lengkap">
+      <label>NIS</label>
+      <input type="text" id="qNis" placeholder="Nomor Induk Siswa">
+      <label>No. Absen</label>
+      <input type="text" id="qAbsen" placeholder="Nomor absen">
+    </div>
+
+    <div id="fieldsKelompok" class="hide">
+      <label>Nama Kelompok</label>
+      <input type="text" id="qNamaKelompok" placeholder="Contoh: Kelompok 3">
+      <label>Anggota Kelompok (pisahkan dengan koma)</label>
+      <textarea id="qAnggota" rows="2" placeholder="Contoh: Andi, Budi, Citra"></textarea>
+    </div>
+
+    <label>Kelas</label>
+    <input type="text" id="qKelas" placeholder="Contoh: XII IPA 1">
+
+    <div class="submit-box">
+      <button class="primary" id="submitHasil">Kirim Hasil</button>
+      <div id="submitResult"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- Data soal (GANTI dengan soalmu sendiri) ---------------- */
+const quizData = [
+  {
+    q: "Apa yang dimaksud dengan algoritma?",
+    options: [
+      "Bahasa pemrograman tertentu",
+      "Urutan langkah logis untuk menyelesaikan masalah",
+      "Jenis perangkat keras komputer",
+      "Nama aplikasi pengolah data"
+    ],
+    correct: 1,
+    explain: "Algoritma adalah urutan langkah logis dan terstruktur untuk menyelesaikan suatu masalah, tidak terikat pada bahasa pemrograman tertentu."
+  },
+  {
+    q: "Manakah yang BUKAN ciri algoritma yang baik?",
+    options: ["Jelas", "Berurutan", "Boleh ambigu di beberapa langkah", "Efektif"],
+    correct: 2,
+    explain: "Algoritma yang baik harus jelas dan tidak ambigu di setiap langkahnya."
+  },
+  {
+    q: "Algoritma membuat teh manis termasuk contoh algoritma dalam bentuk...",
+    options: ["Kode program", "Langkah-langkah naratif (kalimat)", "Flowchart", "Pseudocode"],
+    correct: 1,
+    explain: "Algoritma bisa ditulis dalam berbagai bentuk; contoh teh manis di atas ditulis sebagai langkah-langkah naratif."
+  }
+];
+
+let qIndex = 0, qScore = 0, qAnswered = false, qCompleted = false;
+const qText = document.getElementById('qText');
+const qOptions = document.getElementById('qOptions');
+const qExplain = document.getElementById('qExplain');
+const qNextBtn = document.getElementById('qNextBtn');
+const qScoreLabel = document.getElementById('qScoreLabel');
+const quizCard = document.getElementById('quizCard');
+const quizResult = document.getElementById('quizResult');
+
+function renderQuestion(){
+  qAnswered = false;
+  const item = quizData[qIndex];
+  qText.textContent = (qIndex+1) + ". " + item.q;
+  qOptions.innerHTML = '';
+  qExplain.style.display = 'none';
+  qExplain.textContent = '';
+  qNextBtn.disabled = true;
+  qNextBtn.textContent = qIndex === quizData.length - 1 ? 'Lihat Hasil →' : 'Soal Berikutnya →';
+  item.options.forEach((opt, idx)=>{
+    const b = document.createElement('button');
+    b.className = 'q-opt';
+    b.textContent = opt;
+    b.addEventListener('click', ()=> selectAnswer(idx));
+    qOptions.appendChild(b);
+  });
+}
+function selectAnswer(idx){
+  if(qAnswered) return;
+  qAnswered = true;
+  const item = quizData[qIndex];
+  const btns = [...qOptions.children];
+  btns.forEach((b, i)=>{
+    b.disabled = true;
+    if(i === item.correct) b.classList.add('correct');
+    else if(i === idx) b.classList.add('wrong');
+  });
+  if(idx === item.correct) qScore++;
+  qScoreLabel.textContent = 'Skor: ' + qScore;
+  qExplain.style.display = 'block';
+  qExplain.textContent = item.explain;
+  qNextBtn.disabled = false;
+}
+qNextBtn.addEventListener('click', ()=>{
+  qIndex++;
+  if(qIndex >= quizData.length){
+    quizCard.style.display = 'none';
+    quizResult.style.display = 'block';
+    qCompleted = true;
+    document.getElementById('quizResultScore').textContent = qScore + '/' + quizData.length;
+    let msg = '';
+    const pct = qScore/quizData.length;
+    if(pct === 1) msg = 'Sempurna! Pemahamanmu tentang dasar algoritma sudah sangat baik. 🎉';
+    else if(pct >= 0.6) msg = 'Bagus! Coba baca ulang bagian yang masih meleset.';
+    else msg = 'Belum apa-apa — baca ulang materinya, lalu coba lagi.';
+    document.getElementById('quizResultMsg').textContent = msg;
+  } else {
+    renderQuestion();
+  }
+});
+renderQuestion();
+
+/* ---------------- Toggle mode Individu / Kelompok ---------------- */
+let modeAktif = 'Individu';
+document.getElementById('modeToggle').addEventListener('click', (e)=>{
+  const btn = e.target.closest('.mode-btn');
+  if(!btn) return;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  modeAktif = btn.dataset.mode;
+  document.getElementById('fieldsIndividu').classList.toggle('hide', modeAktif !== 'Individu');
+  document.getElementById('fieldsKelompok').classList.toggle('hide', modeAktif !== 'Kelompok');
+});
+
+/* ---------------- Kirim hasil ke Google Sheet (lewat Apps Script di config.js) ---------------- */
+const MATERI_LABEL = "Dasar Algoritma — Kuis Pilihan Ganda";
+
+async function kirimKeSheet(materi, skor, total, identitas){
+  if(typeof CONTROL_URL === 'undefined'){
+    console.warn('CONTROL_URL belum tersedia — lewati pengiriman ke Sheet.');
+    return;
+  }
+  const payload = {
+    waktu: new Date().toLocaleString('id-ID'),
+    mode: identitas.mode,
+    nama: identitas.nama,
+    nis: identitas.nis || '',
+    absen: identitas.absen || '',
+    kelas: identitas.kelas,
+    anggota: identitas.anggota || '',
+    materi: materi,
+    skor: skor,
+    total: total
+  };
+  try{
+    await fetch(CONTROL_URL, { method: 'POST', body: JSON.stringify(payload) });
+  }catch(err){
+    console.error('Gagal mengirim hasil ke spreadsheet:', materi, err);
+  }
+}
+
+document.getElementById('submitHasil').addEventListener('click', async ()=>{
+  if(!qCompleted){
+    alert('Selesaikan dulu kuisnya sebelum mengirim hasil.');
+    return;
+  }
+  const kelas = document.getElementById('qKelas').value.trim();
+  let identitas;
+
+  if(modeAktif === 'Individu'){
+    const nama = document.getElementById('qNama').value.trim();
+    const nis = document.getElementById('qNis').value.trim();
+    const absen = document.getElementById('qAbsen').value.trim();
+    if(!nama || !kelas || !nis || !absen){
+      alert('Isi dulu Nama, NIS, No. Absen, dan Kelas ya.');
+      return;
+    }
+    identitas = { mode: 'Individu', nama, kelas, nis, absen };
+  } else {
+    const namaKelompok = document.getElementById('qNamaKelompok').value.trim();
+    const anggota = document.getElementById('qAnggota').value.trim();
+    if(!namaKelompok || !kelas || !anggota){
+      alert('Isi dulu Nama Kelompok, Anggota, dan Kelas ya.');
+      return;
+    }
+    identitas = { mode: 'Kelompok', nama: namaKelompok, kelas, anggota };
+  }
+
+  const submitBtn = document.getElementById('submitHasil');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Mengirim...';
+
+  await kirimKeSheet(MATERI_LABEL, qScore, quizData.length, identitas);
+
+  const resultBox = document.getElementById('submitResult');
+  resultBox.style.display = 'block';
+  resultBox.textContent = 'Hasil berhasil dikirim ke guru. Terima kasih! 🎉';
+  submitBtn.textContent = 'Terkirim ✓';
+});
+</script>
+
+<!-- ====== WAJIB DI SETIAP FILE MATERI/KUIS: MODUL_ID + config.js + guard.js ====== -->
+<script>const MODUL_ID = "INF-102";</script>
+<script src="../config.js"></script>
+<script src="../guard.js"></script>
+</body>
+</html>
